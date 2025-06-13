@@ -1,7 +1,7 @@
 # Table of Contents
-  - [Table of Contents](#table-of-contents)
-  - [Registers](#registers)
-  -   [General Purpose Registers](#general-purpose-registers)
+- [Table of Contents](#table-of-contents)
+- [Registers](#registers)
+  - [General Purpose Registers](#general-purpose-registers)
 
 
 
