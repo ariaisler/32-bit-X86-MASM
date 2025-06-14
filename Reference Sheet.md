@@ -4,6 +4,7 @@
   - [General Purpose Registers](#general-purpose-registers)
   - [16-bit and 8-bit Register Subdivisions](#16-bit-and-8-bit-register-subdivisions)
   - [Segment Registers](#segment-registers)
+  - [Flags Register (EFLAGS)](#flags-register-eflags)
 
 
 # Registers
@@ -40,3 +41,16 @@
 |  ES  |	Extra Segment  |	Additional data segment  |	Used with string instructions  |
 |  FS  |	Extra Segment  |	Additional data segment  |	mov eax, fs:[ebx]  |
 |  GS  |	Extra Segment  |	Additional data segment  |	mov eax, gs:[ebx]  |
+
+## Flags Register (EFLAGS)
+
+|Flag  |	Bit  |	Name  |	Description  |	Set When  |	Example  |
+| ---- | ----- | ------ | ------------ | ---------- | -------- |
+|CF  |	0  |	Carry Flag  |	Carry/borrow occurred  |	Unsigned overflow  |	add al, 255 ; sets CF if AL > 0  |
+|ZF  |	6  |	Zero Flag  |	Result is zero  |	Operation result = 0  |	cmp eax, ebx ; ZF=1 if equal  |
+|SF  |	7  |	Sign Flag  |	Result is negative  |	MSB of result = 1  |	sub eax, ebx ; SF=1 if negative  |
+|OF  |	11  |	Overflow Flag  |	Signed overflow   |	Signed arithmetic overflow  |	add al, 127 ; may set OF  |
+|PF  |	2  |	Parity Flag  |	Even number of 1 bits  |	Even parity in low byte  |	Rarely used in high-level code  |
+|AF  |	4  |	Auxiliary Flag  |	BCD carry/borrow  |	BCD arithmetic  |	Used for BCD operations  |
+|IF  |	9  |	Interrupt Flag  |	Interrupts enabled  |	Hardware interrupts allowed  |	sti ; sets IF, cli ; clears IF  |
+|DF  |	10  |	Direction Flag  |	String direction  |	String ops decrement  |	std ; sets DF, cld ; clears DF  |
