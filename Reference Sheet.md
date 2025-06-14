@@ -13,6 +13,10 @@
   - [Comparison Instructions](#comparison-instructions)
   - [Conditional Jump Instructions](#conditional-jump-instructions)
   - [Unconditional Jump and Call Instructions](#unconditional-jump-and-call-instructions)
+  - [String Instructions](#string-instructions)
+  - [Prefix Instructions for String Operations](#prefix-instructions-for-string-operations)
+  - [Stack Instructions](#stack-instructions)
+  - [Flag Control Instructions](#flag-control-instructions)
 
 # Registers
 ## General Purpose Registers
@@ -142,3 +146,39 @@
 |LOOP  |	loop label  |	Decrement ECX and jump if not zero  |	loop loop_label  |
 |LOOPE/LOOPZ  |	loope label  |	Loop while equal/zero  |	loope check_loop  |
 |LOOPNE/LOOPNZ  |	loopne label  |	Loop while not equal/not zero  |	loopne scan_loop  |
+
+## String Instructions
+|Instruction  |	Syntax  |	Description  |	Registers Used  |	Example  |
+| ----------- | ------- | ------------ | ---------------- | -------- |
+|MOVS  |	movsb/movsw/movsd  |	Move string  |	ESI (source), EDI (dest)  |	rep movsb  |
+|STOS  |	stosb/stosw/stosd  |	Store string  |	EAX (value), EDI (dest)  |	rep stosb  |
+|LODS  |	lodsb/lodsw/lodsd  |	Load string  |	ESI (source), EAX (loaded)  |	lodsb  |
+|SCAS  |	scasb/scasw/scasd  |	Scan string  |	EAX (value), EDI (scan)  |	repne scasb  |
+|CMPS  |	cmpsb/cmpsw/cmpsd  |	Compare strings  |	ESI (src1), EDI (src2)  |	repe cmpsb  |
+
+## Prefix Instructions for String Operations
+|Prefix  |	Description  |	Usage  |	Example  |
+| ------ | ------------- | ------- | --------- |
+|REP  |	Repeat while ECX ≠ 0  |	With MOVS, STOS, LODS  |	rep movsb  |
+|REPE/REPZ  |	Repeat while equal/zero  |	With CMPS, SCAS  |	repe cmpsb  |
+|REPNE/REPNZ  |	Repeat while not equal/not zero  |	With CMPS, SCAS  |	repne scasb  |
+
+## Stack Instructions
+|Instruction  |	Syntax  |	Description  |	Stack Effect  |	Example  |
+| ----------- | ------- | ------------ | -------------- | -------- |
+|PUSH  |	push src  |	Push onto stack  |	ESP -= 4  |	push eax  |
+|POP  |	pop dest  |	Pop from stack  |	ESP += 4  |	pop ebx  |
+|PUSHAD  |	pushad  |	Push all general registers  |	ESP -= 32  |	pushad  |
+|POPAD  |	popad  |	Pop all general registers  |	ESP += 32  |	popad  |
+|PUSHFD  |	pushfd  |	Push flags register  |	ESP -= 4  |	pushfd  |
+|POPFD  |	popfd  |	Pop flags register  |	ESP += 4  |	popfd  |
+
+## Flag Control Instructions
+|Instruction  |	Description  |	Flag Effect  |	Example  |
+| ----------- | ------------ | ------------- | --------- |
+|CLC  |	Clear carry flag  |	CF = 0  |	clc  |
+|STC  |	Set carry flag  |	CF = 1  |	stc  |
+|CLD  |	Clear direction flag  |	DF = 0  |	cld  |
+|STD  |	Set direction flag  |	DF = 1  |	std  |
+|CLI  |	Clear interrupt flag  |	IF = 0  |	cli  |
+|STI  |	Set interrupt flag  |	IF = 1  |	sti  |
