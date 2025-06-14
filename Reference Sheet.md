@@ -5,7 +5,14 @@
   - [16-bit and 8-bit Register Subdivisions](#16-bit-and-8-bit-register-subdivisions)
   - [Segment Registers](#segment-registers)
   - [Flags Register (EFLAGS)](#flags-register-eflags)
-
+- [Instructions](#instructions)
+  - [Data Movement Instructions](#data-movement-instructions)
+  - [Arithmetic Instructions](#arithmetic-instructions)
+  - [Logical Instructions](#logical-instructions)
+  - [Shift and Rotate Instructions](#shift-and-rotate-instructions)
+  - [Comparison Instructions](#comparison-instructions)
+  - [Conditional Jump Instructions](#conditional-jump-instructions)
+  - [Unconditional Jump and Call Instructions](#unconditional-jump-and-call-instructions)
 
 # Registers
 ## General Purpose Registers
@@ -54,3 +61,84 @@
 |AF  |	4  |	Auxiliary Flag  |	BCD carry/borrow  |	BCD arithmetic  |	Used for BCD operations  |
 |IF  |	9  |	Interrupt Flag  |	Interrupts enabled  |	Hardware interrupts allowed  |	sti ; sets IF, cli ; clears IF  |
 |DF  |	10  |	Direction Flag  |	String direction  |	String ops decrement  |	std ; sets DF, cld ; clears DF  |
+
+# Instructions
+## Data Movement Instructions
+|Instruction  |	Syntax  |	Description  |	Flags Affected  |	Example  |
+| ----------- | ------- | ------------ | ---------------- | -------- |
+|MOV  |	mov dest, src  |	Move data from source to destination  |	None  |	mov eax, 100  |
+|XCHG  |	xchg op1, op2  |	Exchange values of two operands  |	None  |	xchg eax, ebx  |
+|LEA  |	lea reg, mem  |	Load effective address  |	None  |	lea eax, [ebx+4]  |
+|PUSH  |	push src  |	Push value onto stack  |	None  |	push eax  |
+|POP  |	pop dest  |	Pop value from stack  |	None  |	pop eax  |
+|PUSHAD  |	pushad  |	Push all general registers  |	None  |	pushad  |
+|POPAD  |	popad  |	Pop all general registers  |	None  |	popad  |
+
+## Arithmetic Instructions
+|Instruction  |	Syntax  |	Description  |	Flags Affected  |	Example  |
+| ----------- | ------- | ------------ | ---------------- | -------- |
+|ADD  |	add dest, src  |	Add source to destination  |	CF, ZF, SF, OF, PF, AF  |	add eax, 10  |
+|SUB  |	sub dest, src  |	Subtract source from destination  |	CF, ZF, SF, OF, PF, AF  |	sub eax, 5  |
+|MUL  |	mul src  |	Unsigned multiply EAX by source  |	CF, OF (ZF, SF, PF undefined)  |	mul ebx ; result in EDX:EAX  |
+|IMUL  |	imul src  |	Signed multiply  |	CF, OF (ZF, SF, PF undefined)  |	imul ebx  |
+|DIV  |	div src  |	Unsigned divide EDX:EAX by source  |	All flags undefined  |	div ebx ; quotient in EAX, remainder in EDX  |
+|IDIV  |	idiv src  |	Signed divide EDX:EAX by source  |	All flags undefined  |  idiv ebx  |
+|INC  |	inc dest  |	Increment destination by 1  |	ZF, SF, OF, PF, AF (CF unchanged)  |	inc eax  |
+|DEC  |	dec dest  |	Decrement destination by 1  |	ZF, SF, OF, PF, AF (CF unchanged)  |	dec ecx  |
+|NEG  |	neg dest  |	Two's complement negation  |	CF, ZF, SF, OF, PF, AF  |	neg eax  |
+
+## Logical Instructions
+|Instruction  |	Syntax  |	Description  |	Flags Affected  |	Example  |
+| ----------- | ------- | ------------ | ---------------- | -------- |
+|AND  |	and dest, src  |	Bitwise AND  |	CF=0, OF=0, ZF, SF, PF  |	and eax, 0FFh  |
+|OR  |	or dest, src  |	Bitwise OR  |	CF=0, OF=0, ZF, SF, PF  |	or eax, 1  |
+|XOR  |	xor dest, src  |	Bitwise XOR  |	CF=0, OF=0, ZF, SF, PF  |	xor eax, eax ; clear register  |
+|NOT  |	not dest  |	Bitwise NOT (complement)  |	None  |	not eax  |
+|TEST  |	test op1, op2  |	Bitwise AND without storing result  |	CF=0, OF=0, ZF, SF, PF  |	test eax, eax ; check if zero  |
+
+## Shift and Rotate Instructions
+|Instruction  |	Syntax  |	Description  |	Flags Affected  |	Example  |
+| ----------- | ------- | ------------ | ---------------- | -------- |
+|SHL/SAL  |	shl dest, count  |	Shift left (logical/arithmetic)  |	CF, ZF, SF, PF, OF  |	shl eax, 1 ; multiply by 2  |
+|SHR  |	shr dest, count  |	Shift right logical  |	CF, ZF, SF, PF, OF  |	shr eax, 2 ; divide by 4  |
+|SAR  |	sar dest, count  |	Shift right arithmetic  |	CF, ZF, SF, PF, OF  |	sar eax, 1 ; signed divide by 2  |
+|ROL  |	rol dest, count  |	Rotate left  |	CF, OF  |	rol eax, 4  |
+|ROR  |	ror dest, count  |	Rotate right  |	CF, OF  |	ror eax, 8  |
+|RCL  |	rcl dest, count  |	Rotate left through carry  |	CF, OF  |	rcl eax, 1  |
+|RCR  |	rcr dest, count  |	Rotate right through carry  |	CF, OF  |	rcr eax, 1  |
+
+## Comparison Instructions
+|Instruction  |	Syntax  |	Description  |	Flags Affected  |	Example  |
+| ----------- | ------- | ------------ | ---------------- | -------- |
+|CMP  |	cmp op1, op2  |	Compare (subtract without storing)  |	CF, ZF, SF, OF, PF, AF  |	cmp eax, 100  |
+|CMPS  |	cmps  |	Compare string elements  |	CF, ZF, SF, OF, PF, AF  |	cmpsb ; compare bytes  |
+
+## Conditional Jump Instructions
+|Instruction  |	Condition  |	Flags Checked  |	Description  |	Example  |
+| ----------- | ---------- | --------------- | ------------- | --------- |
+|JE/JZ  |	Equal/Zero  |	ZF = 1  |	Jump if equal or zero  |	je equal_label  |
+|JNE/JNZ  |	Not Equal/Not Zero  |	ZF = 0  |	Jump if not equal or not zero  |	jne not_equal_label  |
+|JG/JNLE  |	Greater (signed)  |	ZF = 0 AND SF = OF  |	Jump if greater  |	jg greater_label  |
+|JL/JNGE  |	Less (signed)  |	SF ≠ OF  |	Jump if less  |	jl less_label  |
+|JGE/JNL  |	Greater or Equal (signed)  |	SF = OF  |	Jump if greater or equal  |	jge ge_label  |
+|JLE/JNG  |	Less or Equal (signed)  |	ZF = 1 OR SF ≠ OF  |	Jump if less or equal  |	jle le_label  |
+|JA/JNBE  |	Above (unsigned)  |	CF = 0 AND ZF = 0  |	Jump if above  |	ja above_label  |
+|JB/JNAE  |	Below (unsigned)  |	CF = 1  |	Jump if below  |	jb below_label  |
+|JAE/JNB  |	Above or Equal (unsigned)  |	CF = 0  |	Jump if above or equal  |	jae ae_label  |
+|JBE/JNA  |	Below or Equal (unsigned)  |	CF = 1 OR ZF = 1  |	Jump if below or equal  |	jbe be_label  |
+|JC  |	Carry  |	CF = 1  |	Jump if carry flag set  |	jc carry_label  |
+|JNC  |	No Carry  |	CF = 0  |	Jump if carry flag clear  |	jnc no_carry_label  |
+|JO  |	Overflow  |	OF = 1  |	Jump if overflow flag set  |	jo overflow_label  |
+|JNO  |	No Overflow  |	OF = 0  |	Jump if overflow flag clear  |	jno no_overflow_label  |
+|JS  |	Sign  |	SF = 1  |	Jump if sign flag set  |	js negative_label  |
+|JNS  |	No Sign  |	SF = 0  |	Jump if sign flag clear  |	jns positive_label  |
+
+## Unconditional Jump and Call Instructions
+|Instruction  |	Syntax  |	Description  |	Example  |
+| ----------- | ------- | ------------ | --------- |
+|JMP  |	jmp label  |	Unconditional jump  |	jmp loop_start  |
+|CALL  |	call procedure  |	Call procedure (push return address)  |	call MyProc  |
+|RET  |	ret [value]  |	Return from procedure  |	ret or ret 8  |
+|LOOP  |	loop label  |	Decrement ECX and jump if not zero  |	loop loop_label  |
+|LOOPE/LOOPZ  |	loope label  |	Loop while equal/zero  |	loope check_loop  |
+|LOOPNE/LOOPNZ  |	loopne label  |	Loop while not equal/not zero  |	loopne scan_loop  |
