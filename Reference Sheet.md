@@ -130,6 +130,8 @@
 |JB/JNAE  |	Below (unsigned)  |	CF = 1  |	Jump if below  |	jb below_label  |
 |JAE/JNB  |	Above or Equal (unsigned)  |	CF = 0  |	Jump if above or equal  |	jae ae_label  |
 |JBE/JNA  |	Below or Equal (unsigned)  |	CF = 1 OR ZF = 1  |	Jump if below or equal  |	jbe be_label  |
+|JP  |  Parity  |  PF = 1  |  Jump if parity (even) | jp label  |
+|JNP  | No Parity  | PF = 0  | Jump if no parity (odd)  | jnp label  |
 |JC  |	Carry  |	CF = 1  |	Jump if carry flag set  |	jc carry_label  |
 |JNC  |	No Carry  |	CF = 0  |	Jump if carry flag clear  |	jnc no_carry_label  |
 |JO  |	Overflow  |	OF = 1  |	Jump if overflow flag set  |	jo overflow_label  |
