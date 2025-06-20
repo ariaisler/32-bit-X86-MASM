@@ -7,6 +7,16 @@
   - [Flags Register (EFLAGS)](#flags-register-eflags)
 - [Data Types and Sizes](#data-types-and-sizes)
   - [Integer Data Types](#integer-data-types)
+  - [Floating-Point Data Types](#floating-point-data-types)
+  - [Legacy Floating-Point Synonyms](#legacy-floating-point-synonyms)
+  - [String and Character Data Types](#string-and-character-data-types)
+  - [Pointer Data Types](#pointer-data-types)
+  - [Array and Structure Data Types](#array-and-structure-data-types)
+  - [Pointer Data Types](#pointer-data-types)
+  - [Structure Example](#structure-example)
+  - [Union Example](#union-example)
+  - [Binary-Coded Decimal (BCD) Data Types](#binary-coded-decimal-bcd-data-types)
+  - [Special Data Types](#special-data-types)
 - [Instructions](#instructions)
   - [Data Movement Instructions](#data-movement-instructions)
   - [Arithmetic Instructions](#arithmetic-instructions)
@@ -57,7 +67,6 @@
 |  GS  |	Extra Segment  |	Additional data segment  |	mov eax, gs:[ebx]  |
 
 ## Flags Register (EFLAGS)
-
 |Flag  |	Bit  |	Name  |	Description  |	Set When  |	Example  |
 | ---- | ----- | ------ | ------------ | ---------- | -------- |
 |CF  |	0  |	Carry Flag  |	Carry/borrow occurred  |	Unsigned overflow  |	add al, 255 ; sets CF if AL > 0  |
@@ -81,6 +90,88 @@
 |SDWORD  |	32 bits  |	SDWORD  |	-2,147,483,648 to 2,147,483,647  |	N/A  |	mySignedDword SDWORD -100000  |
 |QWORD  |	64 bits  |	QWORD  |	-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807  |	0 to 18,446,744,073,709,551,615  |	myQword QWORD 123456789012345  |
 |SQWORD  |	64 bits  |	SQWORD  |	-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807  |	N/A  | mySignedQword SQWORD -123456789  |
+
+## Floating-Point Data Types
+|Data Type  |	Size  |	MASM Directive  |	Precision  |	Range (Approximate)  |	Example Declaration  |
+| --------- | ----- | --------------- | ---------- | --------------------- | --------------------- |
+|REAL4  |	32 bits  |	REAL4  |	Single precision  |	±1.2 × 10^-38 to ±3.4 × 10^38  |	myFloat REAL4 3.14159  |
+|REAL8  |	64 bits  |	REAL8  |	Double precision  |	±2.3 × 10^-308 to ±1.7 × 10^308  |	myDouble REAL8 2.718281828  |
+|REAL10  |	80 bits  |	REAL10  |	Extended precision  |	±3.4 × 10^-4932 to ±1.2 × 10^4932  |	myExtended REAL10 1.23456789012345  |
+
+## Legacy Floating-Point Synonyms
+|Legacy Name  |	Modern Equivalent  |	Size  |	Description  |
+| ----------- | ------------------ | ------ | ------------ |
+|DD  |	DWORD  |	32 bits  |	Define Doubleword  |
+|DQ  |	QWORD  |	64 bits  |	Define Quadword  |
+|DT  |	REAL10  |	80 bits  |	Define Ten-byte  |
+
+## String and Character Data Types
+|Data Type  |	Size  |	MASM Directive  |	Description  |	Example Declaration  |
+| --------- | ----- | --------------- | ------------ | --------------------- |
+|String (null-terminated)  |	Variable  |	BYTE  |	C-style string with null terminator  |	myString BYTE "Hello", 0  |
+|String (counted)  |	Variable  |	BYTE  |	Pascal-style with length prefix  |	myPString BYTE 5, "Hello"  |
+|Character  |	8 bits  |	BYTE  |	Single ASCII character  |	myChar BYTE 'A'  |
+|Unicode Character  |	16 bits  |	WORD  |	Single Unicode character  |	myUniChar WORD 041h  |
+
+## Pointer Data Types
+|Data Type  |	Size  |	MASM Directive  |	Description  |	Example Declaration  |
+| --------- | ----- | --------------- | ------------ | --------------------- |
+|NEAR PTR  |	32 bits  |	DWORD  |	Near pointer (32-bit offset)  |	myPtr DWORD OFFSET myVar  |
+|FAR PTR  |	48 bits  |	6 bytes  |	Far pointer (segment:offset)  |	myFarPtr DF ?  |
+|PROC PTR  |	32 bits  |	DWORD  |	Procedure pointer  |	myProcPtr PROC PTR ?  |
+
+## Array and Structure Data Types
+|Data Type  |  Size  |	MASM Directive  |	Description  |	Example Declaration  |
+| --------- | ------ | ---------------- | ------------ | --------------------- |
+|Array  |	Variable  |	Type DUP(?)  |	Array of specified type  |	myArray DWORD 10 DUP(?)  |
+|Initialized Array  |	Variable  |	Type values	Array with initial values  |	myArray DWORD 1,2,3,4,5  |
+|Structure  |	Variable  |	STRUCT/ENDS	User-defined structure  |	See structure example below  |
+|Union  |	Variable  |	UNION/ENDS	Overlapping data fields  |	See union example below  |
+
+## Structure Example
+```
+PERSON STRUCT
+    firstName   BYTE 20 DUP(?)      ; 20-character first name
+    lastName    BYTE 20 DUP(?)      ; 20-character last name
+    age         WORD ?              ; Age in years
+    salary      DWORD ?             ; Annual salary
+PERSON ENDS
+
+employee1   PERSON <>               ; Declare structure instance
+employee2   PERSON {"John", "Doe", 25, 50000}  ; Initialize structure
+```
+
+## Union Example
+```
+NUMBER_UNION UNION
+    wholePart   DWORD ?             ; 32-bit integer view
+    parts       STRUCT              ; Byte-level view
+        b0      BYTE ?              ; Lowest byte
+        b1      BYTE ?              ; Second byte
+        b2      BYTE ?              ; Third byte
+        b3      BYTE ?              ; Highest byte
+    parts       ENDS
+NUMBER_UNION ENDS
+
+myNumber    NUMBER_UNION <>         ; Declare union instance
+```
+
+## Binary-Coded Decimal (BCD) Data Types
+|Data Type  |	Size  |	MASM Directive  |	Description  |	Example Declaration  |
+| --------- | ----- | --------------- | ------------ | --------------------- |
+|TBYTE  |	80 bits  |	TBYTE  |	Ten-byte BCD number  |	myBCD TBYTE 123456789012345678  |
+|Packed BCD  |	Variable  |	BYTE  |	Two BCD digits per byte  |	myPackedBCD BYTE 12h, 34h  |
+|Unpacked BCD  |	Variable  |	BYTE  |	One BCD digit per byte  |	myUnpackedBCD BYTE 1, 2, 3, 4  |
+
+## Special Data Types
+|Data Type  |	Size  |	MASM Directive  |	Description  |	Example Declaration  |
+| --------- | ----- | --------------- | ------------ | --------------------- |
+|FWORD  |	48 bits  |	FWORD  |	Far pointer (16:32)  |	myFarPtr FWORD ?  |
+|PWORD  |	48 bits  |	PWORD  |	Pseudo-descriptor  |	myPseudo PWORD ?  |
+|MMWORD  |	64 bits  |	MMWORD  |	MMX register data  |	myMMX MMWORD ?  |
+|XMMWORD  |	128 bits  |	XMMWORD  |	XMM register data  |	myXMM XMMWORD ?  |
+|YMMWORD  |	256 bits  |	YMMWORD  |	YMM register data  |	myYMM YMMWORD ?  |
+
 
 # Instructions
 ## Data Movement Instructions
