@@ -71,12 +71,26 @@
 |Instruction  |	Syntax  |	Description  |	Flags Affected  |	Example  |
 | ----------- | ------- | ------------ | ---------------- | -------- |
 |MOV  |	mov dest, src  |	Move data from source to destination  |	None  |	mov eax, 100  |
+|MOVSX  |	movsx dest, src  |	Move with sign extension  |	None  |	movsx eax, bl ; extend signed byte to dword  |
+|MOVZX  |	movzx dest, src  |	Move with zero extension  |	None  |	movzx eax, bl ; extend unsigned byte to dword  |
+|MOVSB  |	movsb  |	Move string byte (ESI→EDI)  |	None  |	rep movsb ; copy string  |
+|MOVSW  |	movsw  |	Move string word (ESI→EDI)  |	None  |	rep movsw ; copy word array  |
+|MOVSD  |	movsd  |	Move string doubleword (ESI→EDI)  |	None  |	rep movsd ; copy dword array  |
+|CMOV  |	cmovcc dest, src  |	Conditional move (Pentium Pro+)  |	None  |	cmove eax, ebx ; move if equal  |
 |XCHG  |	xchg op1, op2  |	Exchange values of two operands  |	None  |	xchg eax, ebx  |
 |LEA  |	lea reg, mem  |	Load effective address  |	None  |	lea eax, [ebx+4]  |
+|LAHF  |	lahf  |	Load AH from flags (low byte)  | None  |	lahf ; AH = low 8 bits of EFLAGS  |
+|SAHF  |	sahf  |	Store AH into flags (low byte)  |	SF, ZF, AF, PF, CF  |	sahf ; restore flags from AH  |
+|PUSHF  |	pushf  |	Push 16-bit flags onto stack  |	None  |	pushf  |
+|PUSHFD  |	pushfd  |	Push 32-bit flags onto stack  |	None  |	pushfd  |
+|POPF  |	popf  |	Pop 16-bit flags from stack  |	All flags  |	popf  |
+|POPFD  |	popfd  |	Pop 32-bit flags from stack  |	All flags  |	popfd  |
 |PUSH  |	push src  |	Push value onto stack  |	None  |	push eax  |
 |POP  |	pop dest  |	Pop value from stack  |	None  |	pop eax  |
-|PUSHAD  |	pushad  |	Push all general registers  |	None  |	pushad  |
-|POPAD  |	popad  |	Pop all general registers  |	None  |	popad  |
+|PUSHA  |	pusha  |	Push all 16-bit general registers  |	None  |	pusha  |
+|PUSHAD  |	pushad  |	Push all 32-bit general registers  |	None  |	pushad  |
+|POPA  |	popa  |	Pop all 16-bit general registers  |	None  |	popa  |
+|POPAD  |	popad  |	Pop all 32-bit general registers  |	None  |	popad  |
 
 ## Arithmetic Instructions
 |Instruction  |	Syntax  |	Description  |	Flags Affected  |	Example  |
