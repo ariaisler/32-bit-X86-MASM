@@ -5,6 +5,8 @@
   - [16-bit and 8-bit Register Subdivisions](#16-bit-and-8-bit-register-subdivisions)
   - [Segment Registers](#segment-registers)
   - [Flags Register (EFLAGS)](#flags-register-eflags)
+- [Data Types and Sizes](#data-types-and-sizes)
+  - [Integer Data Types](#integer-data-types)
 - [Instructions](#instructions)
   - [Data Movement Instructions](#data-movement-instructions)
   - [Arithmetic Instructions](#arithmetic-instructions)
@@ -17,6 +19,7 @@
   - [Prefix Instructions for String Operations](#prefix-instructions-for-string-operations)
   - [Stack Instructions](#stack-instructions)
   - [Flag Control Instructions](#flag-control-instructions)
+  - [Addressing Modes](#addressing-modes)
 
 # Registers
 ## General Purpose Registers
@@ -65,6 +68,19 @@
 |AF  |	4  |	Auxiliary Flag  |	BCD carry/borrow  |	BCD arithmetic  |	Used for BCD operations  |
 |IF  |	9  |	Interrupt Flag  |	Interrupts enabled  |	Hardware interrupts allowed  |	sti ; sets IF, cli ; clears IF  |
 |DF  |	10  |	Direction Flag  |	String direction  |	String ops decrement  |	std ; sets DF, cld ; clears DF  |
+
+# Data Types and Sizes
+## Integer Data Types
+|Data Type  |	Size  |	MASM Directive  |	Signed Range  |  Unsigned Range  |	Example Declaration  |
+| --------- | ----- | --------------- | ------------- | ---------------- | --------------------- |
+|BYTE  |	8 bits  |	BYTE  |	-128 to 127  |	0 to 255  |	myByte BYTE 100  |
+|SBYTE  |	8 bits  |	SBYTE  |	-128 to 127  |	N/A  |	mySignedByte SBYTE -50  |
+|WORD  |	16 bits  |	WORD  |	-32,768 to 32,767  |	0 to 65,535  |	myWord WORD 1000  |
+|SWORD  |	16 bits  |	SWORD  |	-32,768 to 32,767  |	N/A  |	mySignedWord SWORD -1000  |
+|DWORD  |	32 bits  |	DWORD  |	-2,147,483,648 to 2,147,483,647  |	0 to 4,294,967,295  |	myDword DWORD 100000  |
+|SDWORD  |	32 bits  |	SDWORD  |	-2,147,483,648 to 2,147,483,647  |	N/A  |	mySignedDword SDWORD -100000  |
+|QWORD  |	64 bits  |	QWORD  |	-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807  |	0 to 18,446,744,073,709,551,615  |	myQword QWORD 123456789012345  |
+|SQWORD  |	64 bits  |	SQWORD  |	-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807  |	N/A  | mySignedQword SQWORD -123456789  |
 
 # Instructions
 ## Data Movement Instructions
@@ -201,3 +217,15 @@
 |STD  |	Set direction flag  |	DF = 1  |	std  |
 |CLI  |	Clear interrupt flag  |	IF = 0  |	cli  |
 |STI  |	Set interrupt flag  |	IF = 1  |	sti  |
+
+## Addressing Modes
+|Mode  |	Syntax  |	Description  |	Example  |
+| ---- | -------- | ------------ | --------- |
+|Immediate  |	mov eax, 100  |	Constant value  |	mov eax, 42  |
+|Register  |	mov eax, ebx  |	Register to register  |	mov eax, ebx  |
+|Direct  |	mov eax, [var]  |	Memory variable  |	mov eax, [myVar]  |
+|Register Indirect  |	mov eax, [ebx]  |	Memory via register  |	mov eax, [ebx]  |
+|Displacement  |	mov eax, [ebx+4]  |	Register + offset  |	mov eax, [ebx+8]  |
+|Base + Index  |	mov eax, [ebx+ecx]  |	Base + index register  |	mov eax, [ebx+ecx*2]  |
+|Base + Index + Displacement  |	mov eax, [ebx+ecx+4]  |	Complex addressing  |	mov eax, [ebx+ecx*4+8]  |
+
