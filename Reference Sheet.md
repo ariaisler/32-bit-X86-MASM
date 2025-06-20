@@ -138,6 +138,9 @@
 |JNO  |	No Overflow  |	OF = 0  |	Jump if overflow flag clear  |	jno no_overflow_label  |
 |JS  |	Sign  |	SF = 1  |	Jump if sign flag set  |	js negative_label  |
 |JNS  |	No Sign  |	SF = 0  |	Jump if sign flag clear  |	jns positive_label  |
+|JCXZ  |  |  CX = 0  |  Jump if CX = 0  |
+|JECXZ  |  |  ECX = 0  |  Jump if ECX = 0  |
+|JRCXZ  |  |  RCX = 0   |  Jump if RCX = 0 (64-bit mode)  |
 
 ## Unconditional Jump and Call Instructions
 |Instruction  |	Syntax  |	Description  |	Example  |
