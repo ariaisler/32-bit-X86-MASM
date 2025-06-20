@@ -30,6 +30,11 @@
   - [Stack Instructions](#stack-instructions)
   - [Flag Control Instructions](#flag-control-instructions)
   - [Addressing Modes](#addressing-modes)
+- [Directives](#directives)
+  - [Basic Structure Directives](#basic-structure-directives)
+  - [Data Definition and Memory Directives](#data-definition-and-memory-directives)
+  - [Conditional Control Flow Directives (High-Level)](#conditional-control-flow-directives-high-level)
+
 
 # Registers
 ## General Purpose Registers
@@ -320,3 +325,47 @@ myNumber    NUMBER_UNION <>         ; Declare union instance
 |Base + Index  |	mov eax, [ebx+ecx]  |	Base + index register  |	mov eax, [ebx+ecx*2]  |
 |Base + Index + Displacement  |	mov eax, [ebx+ecx+4]  |	Complex addressing  |	mov eax, [ebx+ecx*4+8]  |
 
+# Directives
+## Basic Structure Directives
+|Directive  |	Purpose  |	Example  |
+| --------- | -------- | --------- |
+|.data  |	Data section  |	.data  |
+|.code  |	Code section  |	.code
+|.const  |	Constant data section  |	.const
+|.data?  |	Uninitialized data section  |	.data?  |
+|.stack  |	Stack section  |	.stack 4096  |
+|.model  |	Memory model  |	.model flat, stdcall  |
+|PROC  |	Start procedure  |	MyProc PROC  |
+|ENDP  |	End procedure  |	MyProc ENDP  |
+|END  |	End of program  |	END main  |
+
+## Data Definition and Memory Directives
+|Directive  |	Purpose  |	Example  |
+| --------- | -------- | --------- |
+|OFFSET  |	Get address  |	mov eax, OFFSET myVar  |
+|SIZEOF  |	Get size in bytes  |	mov ecx, SIZEOF myArray  |
+|LENGTHOF  |	Get number of elements  |	mov ecx, LENGTHOF myArray  |
+|TYPE  |	Get size of data type  |	mov eax, TYPE DWORD  |
+|DUP  |	Duplicate values  |	myArray DWORD 5 DUP(0)  |
+|EQU  |	Define constant  |	MAX_SIZE EQU 100  |
+|=  |	Redefinable constant  |	counter = 0  |
+|LABEL  |	Create label with type  |	myLabel LABEL DWORD  |
+|ORG  |	Set location counter  |	ORG 100h  |
+|ALIGN  |	Align data  |	ALIGN 4  |
+
+## Conditional Control Flow Directives (High-Level)
+|Directive  |	Purpose  |	Syntax  |	Example  |
+| --------- | -------- | -------- | -------- |
+|.IF  |	Conditional execution  |	.IF condition  |	.IF eax > 10  |
+|.ELSEIF  |	Alternative condition  |	.ELSEIF condition  |	.ELSEIF eax == 5  |
+|.ELSE  |	Default case  |	.ELSE  |	.ELSE  |
+|.ENDIF  |	End conditional block  |	.ENDIF  |	.ENDIF  |
+|.WHILE  |	While loop  |	.WHILE condition  |	.WHILE eax < 100  |
+|.ENDW  |	End while loop  |	.ENDW  |	.ENDW  |
+|.REPEAT  |	Repeat-until loop  |	.REPEAT  |	.REPEAT  |
+|.UNTIL  |	End repeat loop  |	.UNTIL condition  |	.UNTIL eax == 0  |
+|.UNTILCXZ  |	Repeat until CX is zero  |	.UNTILCXZ  |	.UNTILCXZ  |
+|.FOR  |	For loop (MASM 6.0+)  |	.FOR reg:=start TO end  |	.FOR eax:=1 TO 10  |
+|.ENDFOR  |	End for loop  |	.ENDFOR  |	.ENDFOR  |
+|.BREAK  |	Break from loop  |	.BREAK .IF condition  |	.BREAK .IF eax > 50  |
+|.CONTINUE  |	Continue loop  |	.CONTINUE .IF condition  |	.CONTINUE .IF eax == 0  |
